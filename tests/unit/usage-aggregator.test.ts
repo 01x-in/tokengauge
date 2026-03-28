@@ -49,8 +49,8 @@ describe("aggregateUsageSnapshot", () => {
     expect(snapshot.repoSessionConsumed).toBe(390);
     expect(snapshot.session5hConsumed).toBe(890);
     expect(snapshot.weeklyConsumed).toBe(890);
-    expect(snapshot.repoSessionResetAt).toBe("2026-03-28T16:30:00.000Z");
-    expect(snapshot.session5hResetAt).toBe("2026-03-28T16:30:00.000Z");
+    expect(snapshot.repoSessionResetAt).toBe("2026-03-28T13:00:00.000Z");
+    expect(snapshot.session5hResetAt).toBe("2026-03-28T13:00:00.000Z");
     expect(snapshot.weeklyResetAt).toBe("2026-03-30T00:00:00.000Z");
   });
 

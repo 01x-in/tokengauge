@@ -141,7 +141,7 @@ const buildTierRow = (
   const percentage = `${getPercentage(tokens, limit).toFixed(1)}%`.padStart(6, " ");
   const reset = formatResetCountdown(resetAt, now).padStart(7, " ");
 
-  return `${compactLabel}${compactTokens}${percentage}${reset}`;
+  return `${compactLabel} ${compactTokens} ${percentage} ${reset}`;
 };
 
 const formatCompactTokens = (tokens: number): string => {

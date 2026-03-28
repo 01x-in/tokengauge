@@ -69,15 +69,12 @@ const toUsageRecord = (
     timestamp,
     workspacePath: findWorkspacePath(parsed) ?? deriveWorkspacePathFromFile(filePath),
     sourceFile: filePath,
+    requestKey: findRequestKey(parsed),
     inputTokens,
     outputTokens,
     cacheCreationInputTokens,
     cacheReadInputTokens,
-    totalTokens:
-      inputTokens +
-      outputTokens +
-      cacheCreationInputTokens +
-      cacheReadInputTokens
+    totalTokens: inputTokens + outputTokens
   };
 };
 
@@ -143,6 +140,29 @@ const findWorkspacePath = (value: unknown): string | null => {
     const match = findWorkspacePath(child);
     if (match) {
       return match;
+    }
+  }
+
+  return null;
+};
+
+const findRequestKey = (value: unknown): string | null => {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  for (const key of ["requestId", "id", "uuid"]) {
+    const candidate = value[key];
+    if (typeof candidate === "string" && candidate.length > 0) {
+      return candidate;
+    }
+  }
+
+  const message = value.message;
+  if (isRecord(message)) {
+    const messageId = message.id;
+    if (typeof messageId === "string" && messageId.length > 0) {
+      return messageId;
     }
   }
 

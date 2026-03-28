@@ -39,10 +39,10 @@ describe("parseUsageFile", () => {
     expect(result.skippedLineCount).toBe(1);
     expect(result.records[0]).toMatchObject({
       workspacePath: "/Users/tester/work/tokengauge",
-      totalTokens: 165
+      totalTokens: 150
     });
     expect(result.records[1]).toMatchObject({
-      totalTokens: 245
+      totalTokens: 225
     });
   });
 });

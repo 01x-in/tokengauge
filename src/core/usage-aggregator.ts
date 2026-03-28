@@ -2,6 +2,7 @@ export interface UsageRecord {
   timestamp: string;
   workspacePath: string | null;
   sourceFile: string;
+  requestKey?: string | null;
   inputTokens: number;
   outputTokens: number;
   cacheCreationInputTokens: number;
@@ -70,11 +71,11 @@ const getResetAt = (records: UsageRecord[]): string | null => {
     return null;
   }
 
-  const latestRecord = records.reduce((latest, record) =>
-    Date.parse(record.timestamp) > Date.parse(latest.timestamp) ? record : latest
+  const earliestRecord = records.reduce((earliest, record) =>
+    Date.parse(record.timestamp) < Date.parse(earliest.timestamp) ? record : earliest
   );
 
-  return new Date(Date.parse(latestRecord.timestamp) + FIVE_HOURS_MS).toISOString();
+  return new Date(Date.parse(earliestRecord.timestamp) + FIVE_HOURS_MS).toISOString();
 };
 
 const uniqueSourceFiles = (records: UsageRecord[]): string[] => {

@@ -49,31 +49,32 @@ export const createUsageSnapshotLoader = (
       });
       const files = await dependencies.listJsonlFiles(candidates);
       const seen = new Set<string>();
+      const seenRequestKeys = new Set<string>();
       const records: UsageRecord[] = [];
 
       for (const file of files) {
-        seen.add(file.path);
-        const cached = cache.get(file.path);
-
-        if (cached && cached.mtimeMs === file.mtimeMs && cached.size === file.size) {
-          records.push(...cached.records);
+        if (file.path.includes(`${path.sep}subagents${path.sep}`)) {
           continue;
         }
 
-        try {
-          const fileContent = await dependencies.readFile(file.path);
-          const parsedRecords = parseUsageFile({
-            fileContent,
-            filePath: file.path
-          }).records;
-          cache.set(file.path, {
-            mtimeMs: file.mtimeMs,
-            size: file.size,
-            records: parsedRecords
-          });
-          records.push(...parsedRecords);
-        } catch {
-          continue;
+        seen.add(file.path);
+        const cached = cache.get(file.path);
+        const parsedRecords =
+          cached && cached.mtimeMs === file.mtimeMs && cached.size === file.size
+            ? cached.records
+            : await loadAndCacheFile(file, dependencies, cache);
+
+        for (const record of parsedRecords) {
+          const dedupeKey = record.requestKey;
+          if (dedupeKey && seenRequestKeys.has(dedupeKey)) {
+            continue;
+          }
+
+          if (dedupeKey) {
+            seenRequestKeys.add(dedupeKey);
+          }
+
+          records.push(record);
         }
       }
 
@@ -90,6 +91,28 @@ export const createUsageSnapshotLoader = (
       });
     }
   };
+};
+
+const loadAndCacheFile = async (
+  file: UsageFileDescriptor,
+  dependencies: UsageSnapshotLoaderDependencies,
+  cache: Map<string, CachedUsageFile>
+): Promise<UsageRecord[]> => {
+  try {
+    const fileContent = await dependencies.readFile(file.path);
+    const parsedRecords = parseUsageFile({
+      fileContent,
+      filePath: file.path
+    }).records;
+    cache.set(file.path, {
+      mtimeMs: file.mtimeMs,
+      size: file.size,
+      records: parsedRecords
+    });
+    return parsedRecords;
+  } catch {
+    return [];
+  }
 };
 
 const listJsonlFilesFromFs = async (roots: string[]): Promise<UsageFileDescriptor[]> => {
