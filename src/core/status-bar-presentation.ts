@@ -38,7 +38,7 @@ export const buildStatusBarPresentation = (
 
   if (activeTier.tokens <= 0) {
     return {
-      text: "◇ no data",
+      text: `◇ ${activeTier.label}: no data`,
       tooltip: buildEmptyTooltip(),
       colorKey: "statusBarItem.warningForeground",
       activePercentage: 0,
@@ -50,7 +50,7 @@ export const buildStatusBarPresentation = (
   const resetLabel = formatResetCountdown(activeTier.resetAt, options.now);
 
   return {
-    text: `◇ ${percentage.toFixed(1)}% · ${resetLabel}`,
+    text: `◇ ${activeTier.label} ${percentage.toFixed(1)}% · ${resetLabel}`,
     tooltip: buildTooltip(options),
     colorKey: getColorKey(percentage),
     activePercentage: percentage,

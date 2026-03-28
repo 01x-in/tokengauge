@@ -29,13 +29,13 @@ describe("buildStatusBarPresentation", () => {
       },
       plan: {
         plan: "pro",
-        sessionLimitTokens: 44000,
-        weeklyLimitTokens: 220000
+        sessionLimitTokens: 27_500,
+        weeklyLimitTokens: 325_000
       },
       now: "2026-03-28T12:00:00.000Z"
     });
 
-    expect(presentation.text).toBe("◇ no data");
+    expect(presentation.text).toBe("◇ Repo: no data");
     expect(presentation.colorKey).toBe("statusBarItem.warningForeground");
     expect(presentation.tooltip).toContain("No Claude Code usage data found yet.");
   });
@@ -55,18 +55,42 @@ describe("buildStatusBarPresentation", () => {
       },
       plan: {
         plan: "pro",
-        sessionLimitTokens: 44000,
-        weeklyLimitTokens: 220000
+        sessionLimitTokens: 27_500,
+        weeklyLimitTokens: 325_000
       },
       now: "2026-03-28T12:00:00.000Z"
     });
 
-    expect(presentation.text).toBe("◇ 54.8% · 1d 12h");
+    expect(presentation.text).toBe("◇ Weekly 37.1% · 1d 12h");
     expect(presentation.colorKey).toBe("statusBarItem.foreground");
     expect(presentation.tooltip).toContain("Repo");
     expect(presentation.tooltip).toContain("5hr");
     expect(presentation.tooltip).toContain("Weekly");
     expect(presentation.tooltip).toContain("390");
     expect(presentation.tooltip).toContain("120.5k");
+  });
+
+  it("shows the 5hr mode in the compact status text", () => {
+    const presentation = buildStatusBarPresentation({
+      mode: "session",
+      snapshot: {
+        repoSessionConsumed: 390,
+        session5hConsumed: 3025,
+        weeklyConsumed: 120_450,
+        repoSessionResetAt: "2026-03-28T16:30:00.000Z",
+        session5hResetAt: "2026-03-28T16:30:00.000Z",
+        weeklyResetAt: "2026-03-30T00:00:00.000Z",
+        sourceFiles: ["/tmp/a.jsonl", "/tmp/b.jsonl"],
+        generatedAt: "2026-03-28T12:00:00.000Z"
+      },
+      plan: {
+        plan: "pro",
+        sessionLimitTokens: 27_500,
+        weeklyLimitTokens: 325_000
+      },
+      now: "2026-03-28T12:00:00.000Z"
+    });
+
+    expect(presentation.text).toBe("◇ 5hr 11.0% · 4h 30m");
   });
 });
