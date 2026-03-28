@@ -1,19 +1,94 @@
 {
   "name": "tokengauge",
-  "version": "0.0.1",
-  "description": "A fuel gauge for your AI coding tokens. Coming soon. https://tokengauge.cc",
-  "main": "index.js",
+  "displayName": "TokenGauge",
+  "version": "0.1.0",
+  "description": "A fuel gauge for Claude Code token usage inside VS Code.",
+  "publisher": "tushar-im",
+  "license": "ISC",
+  "type": "commonjs",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:tokengauge.cycleDisplayMode",
+    "onCommand:tokengauge.refreshUsage",
+    "onCommand:tokengauge.selectPlan",
+    "onCommand:tokengauge.snoozeAlerts"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "tokengauge.cycleDisplayMode",
+        "title": "TokenGauge: Cycle Display Mode"
+      },
+      {
+        "command": "tokengauge.refreshUsage",
+        "title": "TokenGauge: Refresh Usage"
+      },
+      {
+        "command": "tokengauge.selectPlan",
+        "title": "TokenGauge: Select Plan"
+      },
+      {
+        "command": "tokengauge.snoozeAlerts",
+        "title": "TokenGauge: Snooze Alerts"
+      }
+    ],
+    "configuration": {
+      "title": "TokenGauge",
+      "properties": {
+        "tokengauge.thresholds.warning": {
+          "type": "number",
+          "default": 70,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Warning threshold percentage."
+        },
+        "tokengauge.thresholds.critical": {
+          "type": "number",
+          "default": 85,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Critical threshold percentage."
+        },
+        "tokengauge.thresholds.panic": {
+          "type": "number",
+          "default": 95,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Panic threshold percentage."
+        }
+      }
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -w -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "npm run typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "package:vsix": "vsce package --no-dependencies"
   },
   "keywords": [
     "claude",
     "claude-code",
     "token",
     "usage",
-    "monitor"
+    "monitor",
+    "vscode-extension"
   ],
   "author": "01x",
-  "license": "ISC",
-  "type": "commonjs"
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "@types/vscode": "^1.103.0",
+    "@vscode/vsce": "^3.6.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
 }
