@@ -6,13 +6,17 @@
   "publisher": "tushar-im",
   "license": "ISC",
   "type": "commonjs",
-  "main": "./dist/extension.js",
+  "main": "./dist/src/extension.js",
   "engines": {
     "vscode": "^1.74.0"
   },
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/01x-in/tokengauge.git"
+  },
   "activationEvents": [
     "onStartupFinished",
     "onCommand:tokengauge.cycleDisplayMode",
@@ -86,7 +90,7 @@
   "author": "01x",
   "devDependencies": {
     "@types/node": "^24.6.0",
-    "@types/vscode": "^1.103.0",
+    "@types/vscode": "^1.74.0",
     "@vscode/vsce": "^3.6.2",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"

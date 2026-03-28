@@ -8,12 +8,15 @@ export interface BuildStatusBarPresentationOptions {
   snapshot: UsageSnapshot;
   plan: PlanSettings;
   now: string;
+  weeklyTip?: string | null;
 }
 
 export interface StatusBarPresentation {
   text: string;
   tooltip: string;
   colorKey: string;
+  activePercentage: number;
+  activeLabel: string;
 }
 
 export const cycleDisplayMode = (mode: DisplayMode): DisplayMode => {
@@ -37,7 +40,9 @@ export const buildStatusBarPresentation = (
     return {
       text: "◇ no data",
       tooltip: buildEmptyTooltip(),
-      colorKey: "statusBarItem.warningForeground"
+      colorKey: "statusBarItem.warningForeground",
+      activePercentage: 0,
+      activeLabel: activeTier.label
     };
   }
 
@@ -47,7 +52,9 @@ export const buildStatusBarPresentation = (
   return {
     text: `◇ ${percentage.toFixed(1)}% · ${resetLabel}`,
     tooltip: buildTooltip(options),
-    colorKey: getColorKey(percentage)
+    colorKey: getColorKey(percentage),
+    activePercentage: percentage,
+    activeLabel: activeTier.label
   };
 };
 
@@ -117,8 +124,9 @@ const buildTooltip = (options: BuildStatusBarPresentationOptions): string => {
       options.now
     )
   ];
+  const footer = options.weeklyTip ? ["", `Tip: ${options.weeklyTip}`] : [];
 
-  return ["TokenGauge", "", ...rows].join("\n");
+  return ["TokenGauge", "", ...rows, ...footer].join("\n");
 };
 
 const buildTierRow = (

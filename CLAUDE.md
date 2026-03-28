@@ -43,11 +43,11 @@ Read agent_docs/system-design.md for the full list before writing any code.
 - Every feature must have tests before implementation (TDD)
 
 ## Test Commands
-(Architect agent will populate these after scaffold)
-- Run tests:   `[to be filled by architect agent]`
-- Type check:  `[to be filled by architect agent]`
-- Lint:        `[to be filled by architect agent]`
-- Dev server:  `[to be filled by architect agent]`
+- Run tests:   `npm test`
+- Type check:  `npm run typecheck`
+- Lint:        `npm run lint`
+- Build:       `npm run build`
+- Package:     `npm run package:vsix`
 
 ## UI/UX Review Gate (runs after all stories in a milestone pass build-review)
 Requires PinchTab running at localhost:9867 and the dev server running.
